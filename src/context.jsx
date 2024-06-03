@@ -8,6 +8,7 @@ const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('a')
   const [cocktails, setCocktails] = useState([])
+  const [cart, setCart] = useState([]);
 
   const fetchDrinks = useCallback( async () => {
     setLoading(true)
@@ -32,6 +33,7 @@ const AppProvider = ({ children }) => {
             image: strDrinkThumb,
             info: strAlcoholic,
             glass: strGlass,
+            price: Math.floor(Math.random() * 20) + 5
           }
         })
         setCocktails(newCocktails)
@@ -47,9 +49,18 @@ const AppProvider = ({ children }) => {
   useEffect(() => {
     fetchDrinks()
   }, [searchTerm,fetchDrinks])
+
+  const addToCart = (cocktail) => {
+    setCart([...cart, cocktail]);
+  };
+
+  const removeFromCart = (id) => {
+    setCart(cart.filter((item) => item.id !== id));
+  };
+
   return (
     <AppContext.Provider
-      value={{ loading, cocktails, searchTerm, setSearchTerm }}
+      value={{ loading, cocktails, searchTerm, setSearchTerm, cart, addToCart, removeFromCart  }}
     >
       {children}
     </AppContext.Provider>
